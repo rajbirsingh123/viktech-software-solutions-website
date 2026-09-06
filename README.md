@@ -18,24 +18,33 @@ directly in a browser.
 ```
 public/
   index.html      the whole site (single page, anchor-linked sections)
+  terms.html      Terms & Conditions page (linked from the footer)
   styles.css      theme, layout, components
   script.js       nav toggle, scroll reveal, contact form
+  favicon.svg     logo mark, also used as the browser-tab icon
   robots.txt
   sitemap.xml
 ```
 
+Color palette and logo style are modeled after [codeteck.com](https://codeteck.com)
+(coral red `#E93232` accent, navy `#071C4D` text, light backgrounds).
+
 ## Before going live — things to update
 
-- [ ] Replace the placeholder email in `public/index.html` and `public/script.js`
-      (`hello@viktechsoftware.com`) with your real business email
+- [ ] Replace the placeholder email in `public/index.html`, `public/script.js`,
+      and `public/terms.html` (`hello@viktechsoftware.com`) with your real
+      business email
 - [ ] Replace the placeholder cards in the "Featured work" section with real
       projects/case studies
 - [ ] Update the domain in `public/robots.txt` and `public/sitemap.xml`
       once you own one
-- [ ] Add a real favicon and logo mark (currently a plain "V" badge)
+- [ ] Have `public/terms.html` reviewed by a lawyer — it's a reasonable
+      starting template, not legal advice
 - [ ] Wire the contact form to a real backend (e.g. [Formspree](https://formspree.io),
       Netlify Forms) if you want submissions without opening the visitor's
       email client — it currently opens a pre-filled `mailto:` link
+- [ ] The footer's social links (Facebook/Instagram/LinkedIn) point to `#` —
+      add your real profile URLs once you have them
 
 ## Deployment
 

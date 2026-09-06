@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terms &amp; Conditions — Viktech Software Solutions</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="nav is-scrolled">
+  <div class="container nav__inner">
+    <a href="index.html" class="brand">
+      <svg class="logo-mark" width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="12" fill="url(#termsLogoGrad)"/>
+        <path d="M13 15 L24 33 L35 15" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs>
+          <linearGradient id="termsLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#7C3AED"/>
+            <stop offset="1" stop-color="#E93232"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Viktech</span>
+        <span class="brand__tagline">Software Solutions</span>
+      </span>
+    </a>
+    <a href="index.html" class="btn btn--ghost">← Back to site</a>
+  </div>
+</header>
+
+<main class="container">
+  <article class="legal">
+    <a class="back" href="index.html">← Back to home</a>
+    <h1>Terms &amp; Conditions</h1>
+    <p class="updated">Last updated: <span id="updated"></span></p>
+
+    <p>
+      These Terms &amp; Conditions ("Terms") govern your use of the Viktech
+      Software Solutions ("Viktech", "we", "us") website and the services we
+      provide. By using our website or engaging us for services, you agree to
+      these Terms.
+    </p>
+
+    <h2>1. Services</h2>
+    <p>
+      Viktech provides custom software development services, including but
+      not limited to web development, mobile app development (Android, iOS,
+      Flutter, React Native), SEO, lead generation, and CRM development. The
+      specific scope, timeline, and cost of any engagement are defined in a
+      separate written proposal or contract agreed to by both parties.
+    </p>
+
+    <h2>2. Quotes &amp; Payment</h2>
+    <ul>
+      <li>Project quotes are estimates based on the information provided at the time and may be revised if requirements change.</li>
+      <li>Payment terms (deposits, milestones, final payment) are set out in the project agreement.</li>
+      <li>Late payments may result in paused work until accounts are brought current.</li>
+    </ul>
+
+    <h2>3. Intellectual Property</h2>
+    <p>
+      Upon full payment, ownership of the final, delivered work product
+      transfers to the client, except for any third-party libraries, tools,
+      or pre-existing Viktech assets, which remain licensed for use in the
+      delivered project. Viktech retains the right to showcase completed
+      work in its portfolio unless otherwise agreed in writing.
+    </p>
+
+    <h2>4. Client Responsibilities</h2>
+    <p>
+      Clients agree to provide timely feedback, access, and materials
+      (content, credentials, brand assets) needed to complete the project.
+      Delays caused by late client input may affect delivery timelines.
+    </p>
+
+    <h2>5. Warranties &amp; Limitation of Liability</h2>
+    <p>
+      Services are provided on an "as is" basis. Viktech will make
+      commercially reasonable efforts to deliver quality, functional
+      software, but does not guarantee uninterrupted or error-free
+      operation. To the maximum extent permitted by law, Viktech is not
+      liable for indirect, incidental, or consequential damages arising
+      from use of the delivered software or website.
+    </p>
+
+    <h2>6. Confidentiality</h2>
+    <p>
+      Both parties agree to keep confidential any non-public business,
+      technical, or financial information shared during the course of an
+      engagement.
+    </p>
+
+    <h2>7. Termination</h2>
+    <p>
+      Either party may terminate an active engagement with written notice as
+      specified in the project agreement. Work completed up to the point of
+      termination will be billed accordingly.
+    </p>
+
+    <h2>8. Governing Law</h2>
+    <p>
+      These Terms are governed by the laws of the jurisdiction in which
+      Viktech Software Solutions is registered, without regard to conflict
+      of law principles.
+    </p>
+
+    <h2>9. Changes to These Terms</h2>
+    <p>
+      We may update these Terms from time to time. Continued use of our
+      website or services after changes are posted constitutes acceptance
+      of the revised Terms.
+    </p>
+
+    <h2>10. Contact</h2>
+    <p>
+      Questions about these Terms can be sent to
+      <a href="mailto:hello@viktechsoftware.com" style="color: var(--accent); font-weight: 600;">hello@viktechsoftware.com</a>.
+    </p>
+
+    <p style="margin-top: 48px; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 24px;">
+      This is a template Terms &amp; Conditions page provided as a starting
+      point. It is not legal advice — have it reviewed by a qualified
+      lawyer in your jurisdiction before relying on it.
+    </p>
+  </article>
+</main>
+
+<footer class="footer" style="padding-top: 40px;">
+  <div class="container footer__bottom" style="border-top: none; padding-top: 0;">
+    <p>© <span id="year"></span> Viktech Software Solutions. All rights reserved.</p>
+    <div class="footer__legal">
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  document.getElementById("updated").textContent = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+</script>
+</body>
+</html>
