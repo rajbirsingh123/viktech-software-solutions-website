@@ -476,26 +476,61 @@ p { color: var(--muted); }
 }
 .page-hero__icon svg { width: 28px; height: 28px; }
 
-/* ---------- Capability list (service pages) ---------- */
-.cap-list { display: flex; flex-direction: column; gap: 18px; }
-.cap-list li {
+/* ---------- Capabilities grid (service pages) ---------- */
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.cap-card {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  font-size: 0.95rem;
-  color: var(--fg);
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-.faq-check {
+.cap-card:hover { border-color: rgba(233, 50, 50, 0.35); transform: translateY(-2px); box-shadow: var(--shadow); }
+.cap-card__icon {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  margin-top: 2px;
-  padding: 3px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  box-sizing: border-box;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(233,50,50,0.12), rgba(124,58,237,0.12));
+  color: var(--accent);
 }
+.cap-card__icon svg { width: 18px; height: 18px; }
+.cap-card p { font-size: 0.9rem; margin: 0; }
+
+/* ---------- Highlights strip ("what you get") ---------- */
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.highlight-card {
+  text-align: center;
+  padding: 8px;
+}
+.highlight-card__icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(233,50,50,0.12), rgba(124,58,237,0.12));
+  color: var(--accent);
+}
+.highlight-card__icon svg { width: 24px; height: 24px; }
+.highlight-card h3 { font-size: 1rem; margin-bottom: 6px; }
+.highlight-card p { font-size: 0.85rem; }
 
 /* ---------- Card link affordance ---------- */
 .card__link {
