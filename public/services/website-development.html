@@ -173,59 +173,50 @@
       <div class="section__head reveal">
         <span class="eyebrow">How it all connects</span>
         <h2>From your domain to your CRM</h2>
-        <p>The technical part, simplified — here's the full path a visitor's information takes, end to end, with nothing manual in the middle.</p>
+        <p>The technical part, simplified — one glance, no scrolling.</p>
       </div>
-      <div class="pipeline">
-        <div class="pipeline__line"><span class="pipeline__pulse"></span></div>
-        <div class="pipeline__steps">
-          <div class="pipeline__step reveal">
-            <div class="pipeline__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg></div>
-            <div class="pipeline__body">
-              <span class="eyebrow">Domain</span>
-              <h3>Connect your domain (GoDaddy or wherever it lives)</h3>
-              <p>We don't move your domain. We just point its DNS at your new site — usually a CNAME or A record — so it goes live on the domain your customers already know, with HTTPS enabled automatically. Takes minutes to configure; DNS propagation is the only real wait.</p>
-            </div>
-          </div>
-          <div class="pipeline__step reveal reveal--delay-1">
-            <div class="pipeline__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-            <div class="pipeline__body">
-              <span class="eyebrow">Build</span>
-              <h3>Build on a fast, modern stack</h3>
-              <p>React, Next.js, TypeScript, and Tailwind CSS. Same stack whether it's a 5-page marketing site or a full web app, so it stays easy to maintain and extend later.</p>
-            </div>
-          </div>
-          <div class="pipeline__step reveal">
-            <div class="pipeline__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15.5" y2="15.5"/><polyline points="6.5 11 9 8.5 11 10.5 13.5 7.5"/></svg></div>
-            <div class="pipeline__body">
-              <span class="eyebrow">SEO</span>
-              <h3>SEO foundation, shipped with the site</h3>
-              <p>Sitemap, robots.txt, meta tags, and schema.org structured data ship on day one — not bolted on later. We connect Google Search Console and Analytics so you can see real rankings and traffic from launch.</p>
-            </div>
-          </div>
-          <div class="pipeline__step reveal reveal--delay-1">
-            <div class="pipeline__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-            <div class="pipeline__body">
-              <span class="eyebrow">Capture</span>
-              <h3>Every lead fires a webhook instantly</h3>
-              <p>Contact forms, quote requests, bookings — the moment someone submits, a webhook fires. No lead sits in an inbox waiting to be manually copied anywhere.</p>
-            </div>
-          </div>
-          <div class="pipeline__step reveal">
-            <div class="pipeline__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="6" cy="6" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="12" cy="18" r="2.3"/><line x1="8.2" y1="7.1" x2="10.3" y2="15.8"/><line x1="15.8" y1="7.1" x2="13.7" y2="15.8"/><line x1="8.3" y1="6" x2="15.7" y2="6"/></svg></div>
-            <div class="pipeline__body">
-              <span class="eyebrow">Automate</span>
-              <h3>n8n picks it up and routes it</h3>
-              <p>That webhook lands in n8n, an automation platform that formats the lead, notifies your team instantly (email or Slack), and routes it wherever it needs to go — zero manual data entry.</p>
-            </div>
-          </div>
-          <div class="pipeline__step reveal reveal--delay-1">
-            <div class="pipeline__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            <div class="pipeline__body">
-              <span class="eyebrow">CRM</span>
-              <h3>Straight into your CRM, ready to work</h3>
-              <p>The lead lands in your CRM — one we build for you, or whatever you already run (HubSpot, Airtable, Notion) — ready for follow-up the moment it comes in.</p>
-            </div>
-          </div>
+      <div class="pipeline-grid" id="pipelineGrid">
+        <div class="pipeline-card reveal" data-step="0">
+          <span class="pipeline-card__num">01</span>
+          <div class="pipeline-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg></div>
+          <span class="eyebrow">Domain</span>
+          <h3>Connect your domain</h3>
+          <p>Point your DNS — no transfer, HTTPS automatic.</p>
+        </div>
+        <div class="pipeline-card reveal reveal--delay-1" data-step="1">
+          <span class="pipeline-card__num">02</span>
+          <div class="pipeline-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <span class="eyebrow">Build</span>
+          <h3>Modern stack</h3>
+          <p>React, Next.js, TypeScript, Tailwind CSS.</p>
+        </div>
+        <div class="pipeline-card reveal" data-step="2">
+          <span class="pipeline-card__num">03</span>
+          <div class="pipeline-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15.5" y2="15.5"/><polyline points="6.5 11 9 8.5 11 10.5 13.5 7.5"/></svg></div>
+          <span class="eyebrow">SEO</span>
+          <h3>SEO from day one</h3>
+          <p>Sitemap, structured data, and analytics — shipped with the site.</p>
+        </div>
+        <div class="pipeline-card reveal reveal--delay-1" data-step="3">
+          <span class="pipeline-card__num">04</span>
+          <div class="pipeline-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <span class="eyebrow">Capture</span>
+          <h3>Instant webhook</h3>
+          <p>Every form submission fires the moment it's sent.</p>
+        </div>
+        <div class="pipeline-card reveal" data-step="4">
+          <span class="pipeline-card__num">05</span>
+          <div class="pipeline-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="6" cy="6" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="12" cy="18" r="2.3"/><line x1="8.2" y1="7.1" x2="10.3" y2="15.8"/><line x1="15.8" y1="7.1" x2="13.7" y2="15.8"/><line x1="8.3" y1="6" x2="15.7" y2="6"/></svg></div>
+          <span class="eyebrow">Automate</span>
+          <h3>n8n routes it</h3>
+          <p>Formats it, notifies your team, zero manual entry.</p>
+        </div>
+        <div class="pipeline-card reveal reveal--delay-1" data-step="5">
+          <span class="pipeline-card__num">06</span>
+          <div class="pipeline-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <span class="eyebrow">CRM</span>
+          <h3>Ready in your CRM</h3>
+          <p>Yours, or HubSpot, Airtable, Notion — ready to work.</p>
         </div>
       </div>
     </div>

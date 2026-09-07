@@ -43,6 +43,22 @@ if (navToggle && navLinks) {
   });
 }
 
+// ---------- Pipeline grid auto-cycle (Website Development page) ----------
+// Plain classList + CSS transitions, no GSAP needed, so this runs
+// regardless of whether the GSAP CDN loaded - only reduced-motion turns
+// it off. Highlights one step at a time so the "automation" feel comes
+// across without needing a scroll-tied line.
+const pipelineCards = document.querySelectorAll(".pipeline-card");
+if (pipelineCards.length && !prefersReducedMotion) {
+  let pi = 0;
+  pipelineCards[0].classList.add("is-active");
+  setInterval(() => {
+    pipelineCards[pi].classList.remove("is-active");
+    pi = (pi + 1) % pipelineCards.length;
+    pipelineCards[pi].classList.add("is-active");
+  }, 1500);
+}
+
 // ---------- Animations ----------
 if (hasGSAP && !prefersReducedMotion) {
   // Hero load-in: split lines, then supporting elements (home page only)
