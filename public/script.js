@@ -11,7 +11,13 @@ if (hasScrollTrigger) {
 // ---------- Smooth scroll (Lenis) ----------
 let lenis = null;
 if (!prefersReducedMotion && typeof window.Lenis !== "undefined") {
-  lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  lenis = new Lenis({
+    duration: 0.7,
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 1,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  });
   lenis.on("scroll", () => hasScrollTrigger && ScrollTrigger.update());
   function raf(time) {
     lenis.raf(time);
@@ -32,7 +38,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     if (!target) return;
     e.preventDefault();
     if (lenis) {
-      lenis.scrollTo(target, { offset: -NAV_OFFSET, duration: 1.2 });
+      lenis.scrollTo(target, { offset: -NAV_OFFSET, duration: 0.9 });
     } else {
       const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
       window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
