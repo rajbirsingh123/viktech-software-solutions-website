@@ -54,7 +54,8 @@ if (hasGSAP && !prefersReducedMotion) {
       .to(".hero-title .line-inner", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12 }, 0.1)
       .to('.hero-anim[data-anim="pill"]', { y: 0, opacity: 1, duration: 0.6 }, 0)
       .to('.hero-anim[data-anim="lead"]', { y: 0, opacity: 1, duration: 0.7 }, 0.5)
-      .to('.hero-anim[data-anim="actions"]', { y: 0, opacity: 1, duration: 0.7 }, 0.65);
+      .to('.hero-anim[data-anim="actions"]', { y: 0, opacity: 1, duration: 0.7 }, 0.65)
+      .to('.hero-anim[data-anim="trust"]', { y: 0, opacity: 1, duration: 0.7 }, 0.8);
   }
 
   // Magnetic buttons (gsap only, no ScrollTrigger dependency)
@@ -73,9 +74,23 @@ if (hasGSAP && !prefersReducedMotion) {
     });
   });
 
-  // Hero glow parallax on mouse move (desktop only)
+  // Hero glow blobs: slow ambient drift (always on) using xPercent/yPercent,
+  // kept on a separate transform channel from the x/y mouse-parallax below
+  // so the two motions compose instead of fighting over the same property.
   const heroSection = document.querySelector(".hero");
   const glows = document.querySelectorAll(".hero__glow");
+  glows.forEach((glow, i) => {
+    gsap.to(glow, {
+      xPercent: i % 2 === 0 ? 6 : -8,
+      yPercent: i % 2 === 0 ? 8 : -6,
+      duration: 9 + i * 2.5,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+    });
+  });
+
+  // Hero glow parallax on mouse move (desktop only)
   const canHover = window.matchMedia("(hover: hover)").matches;
   if (heroSection && glows.length && canHover) {
     heroSection.addEventListener("mousemove", (e) => {
