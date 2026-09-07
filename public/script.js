@@ -1,7 +1,26 @@
 // Footer year
-document.getElementById("year").textContent = new Date().getFullYear();
+document.querySelectorAll("#year").forEach((el) => (el.textContent = new Date().getFullYear()));
 
-// Sticky nav background on scroll
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const hasGSAP = typeof window.gsap !== "undefined";
+const hasScrollTrigger = hasGSAP && typeof window.ScrollTrigger !== "undefined";
+if (hasScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+// ---------- Smooth scroll (Lenis) ----------
+let lenis = null;
+if (!prefersReducedMotion && typeof window.Lenis !== "undefined") {
+  lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  lenis.on("scroll", () => hasScrollTrigger && ScrollTrigger.update());
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+}
+
+// ---------- Sticky nav background on scroll ----------
 const nav = document.querySelector(".nav");
 function updateNav() {
   nav.classList.toggle("is-scrolled", window.scrollY > 12);
@@ -9,50 +28,133 @@ function updateNav() {
 updateNav();
 window.addEventListener("scroll", updateNav);
 
-// Mobile menu toggle
+// ---------- Mobile menu toggle ----------
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
-navToggle.addEventListener("click", () => {
-  navLinks.classList.toggle("is-open");
-});
-navLinks.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => navLinks.classList.remove("is-open"));
-});
-
-// Scroll-reveal animation
-const revealEls = document.querySelectorAll(".reveal");
-if ("IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
-  );
-  revealEls.forEach((el) => observer.observe(el));
-} else {
-  revealEls.forEach((el) => el.classList.add("is-visible"));
+if (navToggle && navLinks) {
+  navToggle.addEventListener("click", () => navLinks.classList.toggle("is-open"));
+  navLinks.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => navLinks.classList.remove("is-open"));
+  });
 }
 
-// Contact form -> opens a pre-filled email to the business inbox.
-// TODO: replace with a real form backend (e.g. Formspree, Netlify Forms, Resend) once you want submissions without opening the visitor's email client.
-const CONTACT_EMAIL = "hello@viktechsoftware.com";
+// ---------- Animations ----------
+if (hasGSAP && !prefersReducedMotion) {
+  // Hero load-in: split lines, then supporting elements
+  const heroTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+  heroTimeline
+    .set(".hero-title .line-inner", { yPercent: 110, opacity: 0 })
+    .set(".hero-anim", { y: 16, opacity: 0 })
+    .to(".hero-title .line-inner", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12 }, 0.1)
+    .to('.hero-anim[data-anim="pill"]', { y: 0, opacity: 1, duration: 0.6 }, 0)
+    .to('.hero-anim[data-anim="lead"]', { y: 0, opacity: 1, duration: 0.7 }, 0.5)
+    .to('.hero-anim[data-anim="actions"]', { y: 0, opacity: 1, duration: 0.7 }, 0.65);
+
+  // Magnetic buttons (gsap only, no ScrollTrigger dependency)
+  document.querySelectorAll(".magnetic").forEach((btn) => {
+    const strength = 0.35;
+    const xTo = gsap.quickTo(btn, "x", { duration: 0.5, ease: "power3.out" });
+    const yTo = gsap.quickTo(btn, "y", { duration: 0.5, ease: "power3.out" });
+    btn.addEventListener("mousemove", (e) => {
+      const rect = btn.getBoundingClientRect();
+      xTo((e.clientX - rect.left - rect.width / 2) * strength);
+      yTo((e.clientY - rect.top - rect.height / 2) * strength);
+    });
+    btn.addEventListener("mouseleave", () => {
+      xTo(0);
+      yTo(0);
+    });
+  });
+
+  // Hero glow parallax on mouse move (desktop only)
+  const heroSection = document.querySelector(".hero");
+  const glows = document.querySelectorAll(".hero__glow");
+  if (heroSection && glows.length && window.matchMedia("(hover: hover)").matches) {
+    heroSection.addEventListener("mousemove", (e) => {
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX / innerWidth - 0.5) * 2;
+      const y = (e.clientY / innerHeight - 0.5) * 2;
+      gsap.to(glows[0], { x: x * 24, y: y * 24, duration: 1.2, ease: "power2.out" });
+      if (glows[1]) gsap.to(glows[1], { x: x * -18, y: y * -18, duration: 1.2, ease: "power2.out" });
+    });
+  }
+
+  if (hasScrollTrigger) {
+    // Scroll-triggered reveals for everything below the fold
+    const revealGroups = new Map();
+    document.querySelectorAll(".reveal").forEach((el) => {
+      const parent = el.closest("section") || el.parentElement;
+      if (!revealGroups.has(parent)) revealGroups.set(parent, []);
+      revealGroups.get(parent).push(el);
+    });
+    revealGroups.forEach((els) => {
+      gsap.set(els, { y: 28, opacity: 0 });
+      ScrollTrigger.batch(els, {
+        start: "top 88%",
+        once: true,
+        onEnter: (batch) =>
+          gsap.to(batch, { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: "power3.out" }),
+      });
+    });
+
+    // Process section: scroll-scrubbed connecting line
+    const stepsLineFill = document.getElementById("stepsLineFill");
+    const stepsWrap = document.querySelector(".steps-wrap");
+    if (stepsLineFill && stepsWrap) {
+      gsap.to(stepsLineFill, {
+        width: "100%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: stepsWrap,
+          start: "top 70%",
+          end: "bottom 60%",
+          scrub: 0.6,
+        },
+      });
+    }
+  } else {
+    // ScrollTrigger failed to load (e.g. CDN hiccup) - just show everything.
+    document.querySelectorAll(".reveal").forEach((el) => {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+    });
+  }
+} else {
+  // No GSAP / reduced motion: show everything immediately, no animation.
+  document.querySelectorAll(".reveal, .hero-anim, .hero-title .line-inner").forEach((el) => {
+    el.style.opacity = "1";
+    el.style.transform = "none";
+  });
+}
+
+// ---------- Contact form -> FormSubmit (AJAX) ----------
 const form = document.getElementById("contactForm");
 const formNote = document.getElementById("formNote");
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const name = form.name.value.trim();
-  const email = form.email.value.trim();
-  const message = form.message.value.trim();
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+    formNote.textContent = "";
 
-  const subject = encodeURIComponent(`New project inquiry from ${name}`);
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-
-  window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-  formNote.textContent = "Opening your email client to send this...";
-});
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${form.action.split("/").pop()}`, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form),
+      });
+      if (!response.ok) throw new Error("Request failed");
+      formNote.textContent = "Thanks — your message is on its way. We'll reply within one business day.";
+      form.reset();
+    } catch (err) {
+      formNote.textContent =
+        "Something went wrong sending that. Please email us directly at hello@viktechsoftware.com.";
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    }
+  });
+}

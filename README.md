@@ -29,20 +29,39 @@ public/
 Color palette and logo style are modeled after [codeteck.com](https://codeteck.com)
 (coral red `#E93232` accent, navy `#071C4D` text, light backgrounds).
 
+## Animations
+
+Loaded via CDN, no build step required:
+
+- **[GSAP](https://gsap.com/) + ScrollTrigger** — hero load-in (staggered line
+  reveal), scroll-triggered fade/stagger reveals on every section, the
+  scroll-scrubbed progress line in "Process", and magnetic hover buttons.
+- **[Lenis](https://lenis.darkroom.engineering/)** — smooth/inertia scrolling.
+
+All animation code lives in `public/script.js` and degrades gracefully: if a
+CDN fails to load, or the visitor has "reduce motion" turned on, everything
+just displays instantly with no animation — nothing depends on JS to be
+*visible*, only to be *animated*.
+
+## Contact form
+
+The form on the Contact section submits via [FormSubmit](https://formsubmit.co)
+(AJAX) to **rajbir786singh95@gmail.com** — no backend needed. **Important:**
+the first submission FormSubmit receives for a new email address sends a
+confirmation link to that inbox; you must click it once before real
+submissions start arriving. Test the form after deploying.
+
 ## Before going live — things to update
 
 - [ ] Replace the placeholder email in `public/index.html`, `public/script.js`,
       and `public/terms.html` (`hello@viktechsoftware.com`) with your real
-      business email
-- [ ] Replace the placeholder cards in the "Featured work" section with real
-      projects/case studies
+      business email if different from the FormSubmit inbox above
+- [ ] Replace the remaining 2 placeholder cards in "Featured work" with real
+      projects/case studies as you get them (Royal Den Capital is already in)
 - [ ] Update the domain in `public/robots.txt` and `public/sitemap.xml`
       once you own one
 - [ ] Have `public/terms.html` reviewed by a lawyer — it's a reasonable
       starting template, not legal advice
-- [ ] Wire the contact form to a real backend (e.g. [Formspree](https://formspree.io),
-      Netlify Forms) if you want submissions without opening the visitor's
-      email client — it currently opens a pre-filled `mailto:` link
 - [ ] The footer's social links (Facebook/Instagram/LinkedIn) point to `#` —
       add your real profile URLs once you have them
 
