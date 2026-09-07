@@ -76,7 +76,8 @@ if (hasGSAP && !prefersReducedMotion) {
   // Hero glow parallax on mouse move (desktop only)
   const heroSection = document.querySelector(".hero");
   const glows = document.querySelectorAll(".hero__glow");
-  if (heroSection && glows.length && window.matchMedia("(hover: hover)").matches) {
+  const canHover = window.matchMedia("(hover: hover)").matches;
+  if (heroSection && glows.length && canHover) {
     heroSection.addEventListener("mousemove", (e) => {
       const { innerWidth, innerHeight } = window;
       const x = (e.clientX / innerWidth - 0.5) * 2;
@@ -84,6 +85,65 @@ if (hasGSAP && !prefersReducedMotion) {
       gsap.to(glows[0], { x: x * 24, y: y * 24, duration: 1.2, ease: "power2.out" });
       if (glows[1]) gsap.to(glows[1], { x: x * -18, y: y * -18, duration: 1.2, ease: "power2.out" });
     });
+  }
+
+  // Hero tech-stack chips: gentle continuous float + mouse parallax + a
+  // small typing terminal, all decorative/behind the headline text.
+  const techFloaters = document.querySelectorAll("[data-float]");
+  if (techFloaters.length) {
+    const floatTweens = [];
+    techFloaters.forEach((el, i) => {
+      gsap.set(el, { opacity: 0, scale: 0.9 });
+      gsap.to(el, { opacity: 1, scale: 1, duration: 0.6, delay: 0.4 + i * 0.06, ease: "power2.out" });
+      const amplitude = 8 + (i % 3) * 3;
+      const duration = 3.4 + (i % 4) * 0.5;
+      floatTweens.push(
+        gsap.to(el, {
+          y: `+=${amplitude}`,
+          duration,
+          delay: i * 0.15,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        })
+      );
+    });
+
+    if (heroSection && canHover) {
+      const parallaxTo = Array.from(techFloaters).map((el, i) =>
+        gsap.quickTo(el, "x", { duration: 0.8, ease: "power2.out" })
+      );
+      heroSection.addEventListener("mousemove", (e) => {
+        const { innerWidth, innerHeight } = window;
+        const x = (e.clientX / innerWidth - 0.5) * 2;
+        techFloaters.forEach((el, i) => {
+          const depth = 6 + (i % 4) * 3;
+          parallaxTo[i](x * depth);
+        });
+      });
+    }
+  }
+
+  // Terminal typewriter (decorative)
+  const terminalLine = document.getElementById("terminalLine");
+  if (terminalLine) {
+    const lines = ["$ npm run build", "✓ build complete", "$ git push origin main", "✓ deployed"];
+    let li = 0;
+    (function typeLoop() {
+      const text = lines[li];
+      let ci = 0;
+      terminalLine.textContent = "";
+      const typeInterval = setInterval(() => {
+        terminalLine.textContent = text.slice(0, ++ci);
+        if (ci === text.length) {
+          clearInterval(typeInterval);
+          setTimeout(() => {
+            li = (li + 1) % lines.length;
+            typeLoop();
+          }, 1400);
+        }
+      }, 45);
+    })();
   }
 
   if (hasScrollTrigger) {
