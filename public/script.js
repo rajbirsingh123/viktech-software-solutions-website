@@ -124,26 +124,101 @@ if (hasGSAP && !prefersReducedMotion) {
     }
   }
 
-  // Terminal typewriter (decorative)
-  const terminalLine = document.getElementById("terminalLine");
-  if (terminalLine) {
-    const lines = ["$ npm run build", "✓ build complete", "$ git push origin main", "✓ deployed"];
-    let li = 0;
-    (function typeLoop() {
-      const text = lines[li];
+  // Terminal: cycles through a short, realistic session for each
+  // technology in turn, and pulses the matching floating chip while its
+  // scene plays.
+  const terminalBody = document.getElementById("terminalBody");
+  const terminalTitle = document.getElementById("terminalTitle");
+  if (terminalBody) {
+    const techScenes = [
+      { tech: "react", ext: "sh", lines: [
+        { text: "$ npm run dev", type: "cmd" },
+        { text: "✓ ready in 320ms", type: "result" },
+      ]},
+      { tech: "nodejs", ext: "sh", lines: [
+        { text: "$ node server.js", type: "cmd" },
+        { text: "✓ listening on :4000", type: "result" },
+      ]},
+      { tech: "flutter", ext: "sh", lines: [
+        { text: "$ flutter run", type: "cmd" },
+        { text: "✓ built app-release.apk", type: "result" },
+      ]},
+      { tech: "kotlin", ext: "sh", lines: [
+        { text: "$ ./gradlew assembleRelease", type: "cmd" },
+        { text: "✓ BUILD SUCCESSFUL", type: "result" },
+      ]},
+      { tech: "swift", ext: "sh", lines: [
+        { text: "$ xcodebuild -scheme App", type: "cmd" },
+        { text: "✓ Build succeeded", type: "result" },
+      ]},
+      { tech: "aws", ext: "sh", lines: [
+        { text: "$ aws s3 sync ./dist s3://viktech-app", type: "cmd" },
+        { text: "✓ upload complete (12 files)", type: "result" },
+      ]},
+      { tech: "docker", ext: "sh", lines: [
+        { text: "$ docker build -t viktech-app .", type: "cmd" },
+        { text: "✓ Successfully built 4f3a9c1", type: "result" },
+      ]},
+      { tech: "postgresql", ext: "sql", lines: [
+        { text: "CREATE TABLE leads (id serial, email text);", type: "cmd" },
+        { text: "✓ CREATE TABLE", type: "result" },
+        { text: "INSERT INTO leads (email) VALUES ('new@lead.com');", type: "cmd" },
+        { text: "✓ INSERT 0 1", type: "result" },
+        { text: "SELECT * FROM leads;", type: "cmd" },
+        { text: "✓ 1 row fetched", type: "result" },
+        { text: "DELETE FROM leads WHERE id = 1;", type: "cmd" },
+        { text: "✓ DELETE 1", type: "result" },
+      ]},
+    ];
+
+    function setActiveChip(tech) {
+      document.querySelectorAll(".tech-chip.is-active").forEach((c) => c.classList.remove("is-active"));
+      const chip = document.querySelector(`.tech-chip[data-tech="${tech}"]`);
+      if (chip) chip.classList.add("is-active");
+    }
+
+    function typeLine(container, line, done) {
+      const el = document.createElement("div");
+      el.className = "term-line" + (line.type === "result" ? " term-line--result" : "");
+      container.appendChild(el);
+      const cursor = document.createElement("span");
+      cursor.className = "hero__terminal-cursor";
+      cursor.textContent = "▌";
       let ci = 0;
-      terminalLine.textContent = "";
-      const typeInterval = setInterval(() => {
-        terminalLine.textContent = text.slice(0, ++ci);
-        if (ci === text.length) {
-          clearInterval(typeInterval);
-          setTimeout(() => {
-            li = (li + 1) % lines.length;
-            typeLoop();
-          }, 1400);
+      const interval = setInterval(() => {
+        ci++;
+        el.textContent = line.text.slice(0, ci);
+        el.appendChild(cursor);
+        if (ci === line.text.length) {
+          clearInterval(interval);
+          cursor.remove();
+          setTimeout(done, line.type === "result" ? 550 : 250);
         }
-      }, 45);
-    })();
+      }, line.type === "cmd" ? 28 : 16);
+    }
+
+    let sceneIndex = 0;
+    function playScene() {
+      const scene = techScenes[sceneIndex];
+      terminalBody.innerHTML = "";
+      if (terminalTitle) terminalTitle.textContent = `${scene.tech}.${scene.ext}`;
+      setActiveChip(scene.tech);
+      let li = 0;
+      (function next() {
+        if (li >= scene.lines.length) {
+          setTimeout(() => {
+            sceneIndex = (sceneIndex + 1) % techScenes.length;
+            playScene();
+          }, 1600);
+          return;
+        }
+        typeLine(terminalBody, scene.lines[li], () => {
+          li++;
+          next();
+        });
+      })();
+    }
+    playScene();
   }
 
   if (hasScrollTrigger) {
