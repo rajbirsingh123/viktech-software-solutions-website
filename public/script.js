@@ -58,6 +58,32 @@ if (hasGSAP && !prefersReducedMotion) {
       .to('.hero-anim[data-anim="trust"]', { y: 0, opacity: 1, duration: 0.7 }, 0.8);
   }
 
+  // Browser-preview hero demo (Website Development page): a looping story
+  // told entirely in motion - load bar fills, content appears, speed/SEO
+  // badges pop in, hold, reset - so a visitor sees "fast and SEO-ready"
+  // instead of reading it in a paragraph.
+  const browserDemo = document.getElementById("browserDemo");
+  if (browserDemo) {
+    const loadbar = document.getElementById("bdLoadbar");
+    const content = document.getElementById("bdContent");
+    const badgeSpeed = document.getElementById("bdBadgeSpeed");
+    const badgeSeo = document.getElementById("bdBadgeSeo");
+
+    const demoTl = gsap.timeline({ repeat: -1, repeatDelay: 1.1, delay: 1 });
+    demoTl
+      .set(loadbar, { width: "0%" })
+      .set(content, { opacity: 0, y: 8 })
+      .set([badgeSpeed, badgeSeo], { opacity: 0, scale: 0.6 })
+      .to(loadbar, { width: "100%", duration: 0.7, ease: "power1.inOut" })
+      .to(loadbar, { opacity: 0, duration: 0.25 }, "-=0.05")
+      .to(content, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.1")
+      .to(badgeSpeed, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, "-=0.15")
+      .to(badgeSeo, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, "-=0.2")
+      .to({}, { duration: 1.8 }) // hold so visitors can actually read the badges
+      .to([content, badgeSpeed, badgeSeo], { opacity: 0, duration: 0.35 })
+      .set(loadbar, { opacity: 1 });
+  }
+
   // Magnetic buttons (gsap only, no ScrollTrigger dependency)
   document.querySelectorAll(".magnetic").forEach((btn) => {
     const strength = 0.35;
