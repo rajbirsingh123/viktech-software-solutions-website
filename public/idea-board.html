@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Idea Board — Sketch Your Project | Viktech Software Solutions</title>
+<meta name="description" content="Sketch your project idea, generate an instant flow chart from the features you need, and send it straight to Viktech Software Solutions to get started." />
+<link rel="canonical" href="https://viktechsoftware.com/idea-board.html" />
+<meta property="og:title" content="Idea Board — Sketch Your Project | Viktech Software Solutions" />
+<meta property="og:description" content="Sketch your project idea, generate an instant flow chart from the features you need, and send it straight to Viktech Software Solutions to get started." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://viktechsoftware.com/idea-board.html" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://viktechsoftware.com/"},{"@type":"ListItem","position":2,"name":"Idea Board","item":"https://viktechsoftware.com/idea-board.html"}]}</script>
+</head>
+<body>
+
+<header class="nav" id="top">
+  <div class="container nav__inner">
+    <a href="index.html" class="brand">
+      <svg class="logo-mark" width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="12" fill="url(#navLogoGrad)"/>
+        <path d="M13 15 L24 33 L35 15" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs>
+          <linearGradient id="navLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#7C3AED"/>
+            <stop offset="1" stop-color="#E93232"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Viktech</span>
+        <span class="brand__tagline">Software Solutions</span>
+      </span>
+    </a>
+
+    <nav class="nav__links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="idea-board.html" class="is-active">Idea Board</a>
+      <a href="work.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <a href="contact.html" class="btn btn--solid nav__cta magnetic">Start a project</a>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow reveal">Idea Board</span>
+      <h1 class="reveal reveal--delay-1">Sketch your idea. We'll turn it into a plan.</h1>
+      <p class="page-hero__lead reveal reveal--delay-2">Pick what your project needs and we'll instantly draw a flow chart for it. Sketch anything else on the whiteboard below, then send it straight to us — the clearer the brief, the faster we can start building.</p>
+    </div>
+  </section>
+
+  <section class="section" id="basics">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">Step 1</span>
+        <h2>What are you building?</h2>
+        <p>Choose a project type and the features it needs — we'll generate a flow chart from it instantly.</p>
+      </div>
+
+      <div class="board-card reveal">
+        <div class="board-field">
+          <label for="projectType">Project type</label>
+          <select id="projectType">
+            <option value="">Select a project type…</option>
+            <option value="Website">Website</option>
+            <option value="Web App / SaaS">Web App / SaaS</option>
+            <option value="E-commerce Store">E-commerce Store</option>
+            <option value="Mobile App">Mobile App</option>
+            <option value="Booking / Scheduling Platform">Booking / Scheduling Platform</option>
+            <option value="CRM / Internal Tool">CRM / Internal Tool</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="board-field">
+          <label>Features</label>
+          <div class="toggle-grid">
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="login" data-label="Sign up & login"><span>Sign up & login</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="catalog" data-label="Product / service catalog"><span>Product / service catalog</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="cart" data-label="Shopping cart"><span>Shopping cart</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="payments" data-label="Payments / checkout"><span>Payments / checkout</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="booking" data-label="Booking & scheduling"><span>Booking & scheduling</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="admin" data-label="Admin dashboard"><span>Admin dashboard</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="blog" data-label="Blog / content"><span>Blog / content</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="contact" data-label="Contact / lead form"><span>Contact / lead form</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="search" data-label="Search & filters"><span>Search & filters</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="notifications" data-label="Notifications"><span>Notifications</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="upload" data-label="File uploads"><span>File uploads</span></label>
+          <label class="toggle-chip"><input type="checkbox" name="feature" value="multilang" data-label="Multiple languages"><span>Multiple languages</span></label>
+          </div>
+        </div>
+
+        <button type="button" id="generateFlow" class="btn btn--solid">Generate flow chart →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--border" id="flowchart">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">Your flow chart</span>
+        <h2>Instant blueprint</h2>
+        <p>This is a starting point, not a final spec — add notes on the whiteboard below and we'll refine it with you.</p>
+      </div>
+      <div class="board-card reveal">
+        <div class="canvas-wrap">
+          <canvas id="flowCanvas" style="display:none"></canvas>
+          <p class="canvas-empty" id="flowEmpty">Pick a project type and features above, then hit "Generate flow chart."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--border" id="whiteboard">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">Step 2</span>
+        <h2>Whiteboard</h2>
+        <p>Sketch layouts, jot notes, draw arrows — anything that helps explain your idea.</p>
+      </div>
+      <div class="board-card reveal">
+        <div class="board-toolbar">
+          <button type="button" class="tool-btn is-active" data-tool="pen" aria-label="Pen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            Pen
+          </button>
+          <button type="button" class="tool-btn" data-tool="note" aria-label="Sticky note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10z"/><path d="M15 21v-4a2 2 0 0 1 2-2h4"/></svg>
+            Note
+          </button>
+          <div class="tool-colors" id="toolColors">
+            <button type="button" class="color-swatch is-active" style="--c:#071c4d" data-color="#071c4d" aria-label="Navy"></button>
+            <button type="button" class="color-swatch" style="--c:#e93232" data-color="#e93232" aria-label="Red"></button>
+            <button type="button" class="color-swatch" style="--c:#7c3aed" data-color="#7c3aed" aria-label="Violet"></button>
+            <button type="button" class="color-swatch" style="--c:#22c55e" data-color="#22c55e" aria-label="Green"></button>
+          </div>
+          <button type="button" class="tool-btn" id="undoBtn" aria-label="Undo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7"/></svg>
+            Undo
+          </button>
+          <button type="button" class="tool-btn" id="clearBtn" aria-label="Clear board">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Clear
+          </button>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="whiteboardCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--border" id="send">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">Step 3</span>
+        <h2>Send it to us</h2>
+        <p>We'll email you back — often the same day — with next steps to get your project moving.</p>
+      </div>
+
+      <form class="form board-form reveal" id="ideaForm" action="https://formsubmit.co/rajbir786singh95@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New idea board submission — Viktech website">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="form__row">
+          <label for="ideaName">Name</label>
+          <input required id="ideaName" name="name" placeholder="Jane Doe" />
+        </div>
+        <div class="form__row">
+          <label for="ideaEmail">Email</label>
+          <input required type="email" id="ideaEmail" name="email" placeholder="jane@company.com" />
+        </div>
+        <div class="form__row">
+          <label for="ideaNotes">Anything else we should know?</label>
+          <textarea id="ideaNotes" name="notes" rows="3" placeholder="Optional — timeline, budget, inspiration links…"></textarea>
+        </div>
+        <div class="board-form__actions">
+          <button type="submit" class="btn btn--solid form__submit" id="sendIdeaBtn">Send my idea to Viktech →</button>
+          <button type="button" class="btn btn--ghost" id="downloadBtn">Download PNG</button>
+        </div>
+        <p class="form__note" id="ideaFormNote"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__about">
+        <div class="brand brand--sm">
+          <svg class="logo-mark" width="34" height="34" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="12" fill="url(#footerLogoGrad)"/>
+        <path d="M13 15 L24 33 L35 15" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs>
+          <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#7C3AED"/>
+            <stop offset="1" stop-color="#E93232"/>
+          </linearGradient>
+        </defs>
+      </svg>
+          <span class="brand__text">
+            <span class="brand__name">Viktech</span>
+            <span class="brand__tagline">Software Solutions</span>
+          </span>
+        </div>
+        <p>Custom web, mobile, and cloud software for startups and growing companies — from first line of code to launch and beyond.</p>
+        <div class="footer__social">
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V8h4v1.5A5.98 5.98 0 0 1 16 8z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer__heading">Company</div>
+        <div class="footer__links">
+          <a href="about.html">About</a>
+          <a href="work.html">Our Work</a>
+          <a href="services.html">Services</a>
+          <a href="idea-board.html">Idea Board</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer__heading">Services</div>
+        <div class="footer__links">
+          <a href="services/android-app-development.html">Android Development</a>
+          <a href="services/ios-app-development.html">iOS Development</a>
+          <a href="services/flutter-development.html">Flutter Development</a>
+          <a href="services/react-native-development.html">React Native Development</a>
+          <a href="services/website-development.html">Website Development</a>
+          <a href="services/seo.html">SEO</a>
+          <a href="services/lead-generation.html">Lead Generation</a>
+          <a href="services/crm-development.html">CRM Development</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer__heading">Contact</div>
+        <div class="footer__contact">
+          <a href="mailto:hello@viktechsoftware.com">hello@viktechsoftware.com</a>
+          <a href="tel:+12496881693">(249) 688-1693</a>
+          <a href="https://www.google.com/maps/place/Viktech+Software+Solutions/@43.4693442,-80.5828224,15z/data=!4m16!1m9!3m8!1s0x882bf6d0aacc00ef:0xb3a6902cfa14d920!2s410+Woodrow+Dr,+Waterloo,+ON+N2T+2V7!3b1!8m2!3d43.4695504!4d-80.5826853!10e5!16s%2Fg%2F11c5dkygsx!3m5!1s0x882bf75b9eb2131b:0xaab2100694bbc288!8m2!3d43.4695504!4d-80.5826853!16s%2Fg%2F11zfkspb1_?hl=en" target="_blank" rel="noopener">410 Woodrow Drive<br>Waterloo, Ontario, Canada</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© <span id="year"></span> Viktech Software Solutions. All rights reserved.</p>
+      <div class="footer__legal">
+        <a href="terms.html">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+<script src="idea-board.js"></script>
+</body>
+</html>
