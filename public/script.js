@@ -77,8 +77,10 @@ if (hasGSAP && !prefersReducedMotion) {
   // Hero glow blobs: slow ambient drift (always on) using xPercent/yPercent,
   // kept on a separate transform channel from the x/y mouse-parallax below
   // so the two motions compose instead of fighting over the same property.
-  const heroSection = document.querySelector(".hero");
-  const glows = document.querySelectorAll(".hero__glow");
+  // Covers both the homepage hero (.hero__glow) and every inner-page hero
+  // (.page-hero__glow) - only one of the two exists on any given page.
+  const heroSection = document.querySelector(".hero, .page-hero");
+  const glows = document.querySelectorAll(".hero__glow, .page-hero__glow");
   glows.forEach((glow, i) => {
     gsap.to(glow, {
       xPercent: i % 2 === 0 ? 6 : -8,
