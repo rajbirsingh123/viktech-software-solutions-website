@@ -8,27 +8,9 @@ if (hasScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// ---------- Smooth scroll (Lenis) ----------
-let lenis = null;
-if (!prefersReducedMotion && typeof window.Lenis !== "undefined") {
-  lenis = new Lenis({
-    duration: 0.7,
-    smoothWheel: true,
-    wheelMultiplier: 1,
-    touchMultiplier: 1,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  });
-  lenis.on("scroll", () => hasScrollTrigger && ScrollTrigger.update());
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-}
-
-// ---------- Smooth in-page anchor scrolling ----------
-// Native hash jumps bypass Lenis (and land the section under the fixed nav),
-// so intercept same-page anchor clicks and drive the scroll ourselves.
+// ---------- In-page anchor scrolling ----------
+// Native hash jumps land the section right under the fixed nav bar, so
+// offset for that; otherwise this is just the browser's own smooth scroll.
 const NAV_OFFSET = 88;
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener("click", (e) => {
@@ -37,12 +19,8 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     const target = document.querySelector(id);
     if (!target) return;
     e.preventDefault();
-    if (lenis) {
-      lenis.scrollTo(target, { offset: -NAV_OFFSET, duration: 0.9 });
-    } else {
-      const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
-      window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
-    }
+    const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+    window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
     history.pushState(null, "", id);
   });
 });

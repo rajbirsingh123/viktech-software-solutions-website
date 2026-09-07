@@ -36,7 +36,10 @@ Loaded via CDN, no build step required:
 - **[GSAP](https://gsap.com/) + ScrollTrigger** — hero load-in (staggered line
   reveal), scroll-triggered fade/stagger reveals on every section, the
   scroll-scrubbed progress line in "Process", and magnetic hover buttons.
-- **[Lenis](https://lenis.darkroom.engineering/)** — smooth/inertia scrolling.
+
+Scrolling itself is the browser's native scroll (no smooth-scroll library) —
+a smoothing library (Lenis) was tried and removed after it made scrolling
+feel sluggish.
 
 All animation code lives in `public/script.js` and degrades gracefully: if a
 CDN fails to load, or the visitor has "reduce motion" turned on, everything
