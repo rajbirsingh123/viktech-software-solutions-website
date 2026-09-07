@@ -61,15 +61,17 @@ if (navToggle && navLinks) {
 
 // ---------- Animations ----------
 if (hasGSAP && !prefersReducedMotion) {
-  // Hero load-in: split lines, then supporting elements
-  const heroTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-  heroTimeline
-    .set(".hero-title .line-inner", { yPercent: 110, opacity: 0 })
-    .set(".hero-anim", { y: 16, opacity: 0 })
-    .to(".hero-title .line-inner", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12 }, 0.1)
-    .to('.hero-anim[data-anim="pill"]', { y: 0, opacity: 1, duration: 0.6 }, 0)
-    .to('.hero-anim[data-anim="lead"]', { y: 0, opacity: 1, duration: 0.7 }, 0.5)
-    .to('.hero-anim[data-anim="actions"]', { y: 0, opacity: 1, duration: 0.7 }, 0.65);
+  // Hero load-in: split lines, then supporting elements (home page only)
+  if (document.querySelector(".hero-title")) {
+    const heroTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+    heroTimeline
+      .set(".hero-title .line-inner", { yPercent: 110, opacity: 0 })
+      .set(".hero-anim", { y: 16, opacity: 0 })
+      .to(".hero-title .line-inner", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12 }, 0.1)
+      .to('.hero-anim[data-anim="pill"]', { y: 0, opacity: 1, duration: 0.6 }, 0)
+      .to('.hero-anim[data-anim="lead"]', { y: 0, opacity: 1, duration: 0.7 }, 0.5)
+      .to('.hero-anim[data-anim="actions"]', { y: 0, opacity: 1, duration: 0.7 }, 0.65);
+  }
 
   // Magnetic buttons (gsap only, no ScrollTrigger dependency)
   document.querySelectorAll(".magnetic").forEach((btn) => {
