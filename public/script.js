@@ -20,6 +20,27 @@ if (!prefersReducedMotion && typeof window.Lenis !== "undefined") {
   requestAnimationFrame(raf);
 }
 
+// ---------- Smooth in-page anchor scrolling ----------
+// Native hash jumps bypass Lenis (and land the section under the fixed nav),
+// so intercept same-page anchor clicks and drive the scroll ourselves.
+const NAV_OFFSET = 88;
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", (e) => {
+    const id = link.getAttribute("href");
+    if (!id || id === "#") return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    if (lenis) {
+      lenis.scrollTo(target, { offset: -NAV_OFFSET, duration: 1.2 });
+    } else {
+      const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+      window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    }
+    history.pushState(null, "", id);
+  });
+});
+
 // ---------- Sticky nav background on scroll ----------
 const nav = document.querySelector(".nav");
 function updateNav() {
@@ -111,6 +132,13 @@ if (hasGSAP && !prefersReducedMotion) {
           scrub: 0.6,
         },
       });
+    }
+
+    // Trigger positions are measured before web fonts/images finish loading,
+    // which can shift section heights - recompute once everything settles.
+    window.addEventListener("load", () => ScrollTrigger.refresh());
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => ScrollTrigger.refresh());
     }
   } else {
     // ScrollTrigger failed to load (e.g. CDN hiccup) - just show everything.
