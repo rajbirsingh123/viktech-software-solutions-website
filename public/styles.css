@@ -132,12 +132,19 @@ p { color: var(--muted); }
   cursor: pointer;
   padding: 4px;
 }
-.nav__toggle span { width: 22px; height: 2px; background: var(--navy); border-radius: 2px; }
+.nav__toggle span {
+  width: 22px; height: 2px; background: var(--navy); border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.2s ease;
+  transform-origin: center;
+}
+.nav__toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav__toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav__toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 @media (max-width: 860px) {
-  .nav__links, .nav__cta { display: none; }
+  .nav__cta { display: none; }
   .nav__toggle { display: flex; }
-  .nav__links.is-open {
+  .nav__links {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -147,6 +154,40 @@ p { color: var(--muted); }
     padding: 24px;
     gap: 20px;
     box-shadow: var(--shadow);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-12px);
+    transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.28s;
+  }
+  .nav__links a {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .nav__links.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
+  }
+  .nav__links.is-open a { opacity: 1; transform: translateY(0); }
+  .nav__links.is-open a:nth-child(1) { transition-delay: 0.06s; }
+  .nav__links.is-open a:nth-child(2) { transition-delay: 0.11s; }
+  .nav__links.is-open a:nth-child(3) { transition-delay: 0.16s; }
+  .nav__links.is-open a:nth-child(4) { transition-delay: 0.21s; }
+  .nav__links.is-open a:nth-child(5) { transition-delay: 0.26s; }
+  .nav__links.is-open a:nth-child(6) { transition-delay: 0.31s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__toggle span { transition: opacity 0.15s ease; }
+  .nav__toggle[aria-expanded="true"] span:nth-child(1),
+  .nav__toggle[aria-expanded="true"] span:nth-child(3) { transform: none; }
+  .nav__links, .nav__links a {
+    transition: opacity 0.15s ease !important;
+    transform: none !important;
   }
 }
 
@@ -1184,9 +1225,30 @@ a.contact__row:hover { color: var(--accent); }
 
 /* ---------- Service delivery pipeline (compact grid) ---------- */
 .pipeline-grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 14px;
+}
+/* Traveling dot that hops from the active step's icon to the next one,
+   visualizing the data actually moving through the pipeline. Position is
+   set in JS from each card's real layout, so it holds up in any grid
+   wrap (1, 2, 3 or 6 columns). */
+.pipeline-flow {
+  position: absolute;
+  z-index: 6;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff, var(--accent) 60%);
+  box-shadow: 0 0 0 4px rgba(233, 50, 50, 0.16), 0 0 14px 2px rgba(233, 50, 50, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: left 1.05s cubic-bezier(0.65, 0, 0.35, 1), top 1.05s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.3s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-flow { display: none; }
 }
 .pipeline-card {
   position: relative;
@@ -1280,3 +1342,47 @@ a.contact__row:hover { color: var(--accent); }
   .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
 }
+
+/* ---------- 3D tilt + sheen (cards, added via script.js) ---------- */
+/* .tilt sits alongside a card's own class (.card / .cap-card / .project),
+   so this block is intentionally last: on the equal-specificity ":hover"
+   tie with those base rules, source order lets this one win and layer the
+   rotation + lift on top instead of replacing it. */
+.tilt {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --sheen-x: 50%;
+  --sheen-y: 50%;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tilt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--sheen-x) var(--sheen-y), rgba(255, 255, 255, 0.4), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.tilt:hover::before { opacity: 1; }
+.tilt:hover {
+  transition: transform 0.08s linear;
+  transform: perspective(800px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-3px);
+}
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .tilt { transition: none; }
+  .tilt::before { display: none; }
+  .tilt:hover { transform: none; }
+}
+
+/* ---------- Decoded / scrambled headline text ---------- */
+/* Per-character spans injected by script.js's splitIntoChars()/scrambleChars().
+   Deliberately left as plain inline (no display change) so word-wrapping
+   behaves exactly as it did with a plain text node - a heading split into
+   one span per letter must still wrap at the same word boundaries on
+   narrow screens. */

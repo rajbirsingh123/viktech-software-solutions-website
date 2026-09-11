@@ -4,8 +4,8 @@
     {
       "name": "viktech-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000
+      "runtimeArgs": ["start"],
+      "port": 8092
     }
   ]
 }

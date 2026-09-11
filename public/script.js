@@ -37,32 +37,169 @@ window.addEventListener("scroll", updateNav);
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
 if (navToggle && navLinks) {
-  navToggle.addEventListener("click", () => navLinks.classList.toggle("is-open"));
+  navToggle.setAttribute("aria-expanded", "false");
+  navToggle.addEventListener("click", () => {
+    const isOpen = navLinks.classList.toggle("is-open");
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+  });
   navLinks.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => navLinks.classList.remove("is-open"));
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("is-open");
+      navToggle.setAttribute("aria-expanded", "false");
+    });
+  });
+}
+
+// Real mouse + fine pointer - gates the card tilt below, which assumes
+// continuous mousemove and makes no sense on touch. Distinct from the
+// `canHover` used further down for the hero glow, which only cares about
+// hover support.
+const canHoverFine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+// ---------- 3D tilt + sheen (service/project cards) ----------
+// Rotates each card toward the cursor and sweeps a light sheen under it -
+// plain CSS custom properties updated on mousemove, no animation library
+// needed. Desktop pointer only; the CSS itself also backs out under
+// reduced motion.
+if (canHoverFine && !prefersReducedMotion) {
+  document.querySelectorAll(".card, .cap-card, .project").forEach((card) => {
+    card.classList.add("tilt");
+    const TILT_STRENGTH = 7; // degrees at the card's edge
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      card.style.setProperty("--tilt-x", `${((py - 0.5) * -TILT_STRENGTH).toFixed(2)}deg`);
+      card.style.setProperty("--tilt-y", `${((px - 0.5) * TILT_STRENGTH).toFixed(2)}deg`);
+      card.style.setProperty("--sheen-x", `${(px * 100).toFixed(1)}%`);
+      card.style.setProperty("--sheen-y", `${(py * 100).toFixed(1)}%`);
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.setProperty("--tilt-x", "0deg");
+      card.style.setProperty("--tilt-y", "0deg");
+    });
   });
 }
 
 // ---------- Pipeline grid auto-cycle (Website Development page) ----------
 // Plain classList + CSS transitions, no GSAP needed, so this runs
 // regardless of whether the GSAP CDN loaded - only reduced-motion turns
-// it off. Highlights one step at a time so the "automation" feel comes
-// across without needing a scroll-tied line.
+// it off. Highlights one step at a time, and a small dot physically hops
+// from each step's icon to the next one's - real DOM coordinates, so it
+// tracks correctly whether the grid is laid out as 1, 2, 3 or 6 columns.
+const pipelineGrid = document.getElementById("pipelineGrid");
 const pipelineCards = document.querySelectorAll(".pipeline-card");
+const pipelineFlow = document.getElementById("pipelineFlow");
+
 if (pipelineCards.length && !prefersReducedMotion) {
   let pi = 0;
-  pipelineCards[0].classList.add("is-active");
-  setInterval(() => {
+
+  function flowPositionFor(index) {
+    if (!pipelineFlow || !pipelineGrid) return;
+    const gridRect = pipelineGrid.getBoundingClientRect();
+    const iconEl = pipelineCards[index].querySelector(".pipeline-card__icon") || pipelineCards[index];
+    const iconRect = iconEl.getBoundingClientRect();
+    const x = iconRect.left - gridRect.left + iconRect.width / 2;
+    const y = iconRect.top - gridRect.top + iconRect.height / 2;
+    pipelineFlow.style.left = `${x}px`;
+    pipelineFlow.style.top = `${y}px`;
+  }
+
+  // Repositions the dot without sliding it there - used when it's already
+  // invisible (first paint, and the wrap-around jump back to step one).
+  function snapFlowTo(index) {
+    if (!pipelineFlow) return;
+    pipelineFlow.style.transition = "none";
+    flowPositionFor(index);
+    void pipelineFlow.offsetWidth; // flush the snap before re-enabling the slide/fade
+    pipelineFlow.style.transition = "";
+  }
+
+  function activate(index) {
     pipelineCards[pi].classList.remove("is-active");
-    pi = (pi + 1) % pipelineCards.length;
+    pi = index;
     pipelineCards[pi].classList.add("is-active");
+    flowPositionFor(pi);
+    if (pipelineFlow) pipelineFlow.style.opacity = "1";
+  }
+
+  pipelineCards[0].classList.add("is-active");
+  snapFlowTo(0);
+  requestAnimationFrame(() => {
+    if (pipelineFlow) pipelineFlow.style.opacity = "1";
+  });
+
+  window.addEventListener("resize", () => flowPositionFor(pi));
+
+  setInterval(() => {
+    const next = (pi + 1) % pipelineCards.length;
+    if (next === 0) {
+      // Wrapping back to step one: fade out instead of flying the dot
+      // backwards across the whole grid, then jump and fade back in.
+      if (pipelineFlow) pipelineFlow.style.opacity = "0";
+      setTimeout(() => {
+        pipelineCards[pi].classList.remove("is-active");
+        pi = 0;
+        pipelineCards[pi].classList.add("is-active");
+        snapFlowTo(0);
+        requestAnimationFrame(() => {
+          if (pipelineFlow) pipelineFlow.style.opacity = "1";
+        });
+      }, 320);
+    } else {
+      activate(next);
+    }
   }, 1500);
 }
 
 // ---------- Animations ----------
 if (hasGSAP && !prefersReducedMotion) {
+  // Terminal-style decode: splits a heading into one span per character,
+  // then have it briefly cycle through code-like glyphs before settling on
+  // the real letter, left to right - a nod to the hero's own typing
+  // terminal rather than a plain fade. splitIntoChars() only rearranges
+  // markup (safe to call anytime); scrambleChars() runs the glyph cycle
+  // and should be called right as the heading becomes visible.
+  function splitIntoChars(el) {
+    const finalText = el.textContent;
+    el.setAttribute("aria-label", finalText);
+    el.textContent = "";
+    const frag = document.createDocumentFragment();
+    [...finalText].forEach((ch) => {
+      const span = document.createElement("span");
+      span.className = "decode-char";
+      span.setAttribute("aria-hidden", "true");
+      span.textContent = ch;
+      frag.appendChild(span);
+    });
+    el.appendChild(frag);
+  }
+
+  function scrambleChars(el, stagger = 16) {
+    const glyphs = "01#$%&<>[]{}/\\*+=";
+    el.querySelectorAll(".decode-char").forEach((span, i) => {
+      const final = span.textContent;
+      if (final === " ") return;
+      let ticks = 5 + Math.floor(Math.random() * 4);
+      setTimeout(() => {
+        const iv = setInterval(() => {
+          ticks--;
+          if (ticks <= 0) {
+            span.textContent = final;
+            clearInterval(iv);
+          } else {
+            span.textContent = glyphs[(Math.random() * glyphs.length) | 0];
+          }
+        }, 26);
+      }, i * stagger);
+    });
+  }
+
   // Hero load-in: split lines, then supporting elements (home page only)
   if (document.querySelector(".hero-title")) {
+    const heroLines = document.querySelectorAll(".hero-title .line-inner");
+    heroLines.forEach(splitIntoChars);
+
     const heroTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
     heroTimeline
       .set(".hero-title .line-inner", { yPercent: 110, opacity: 0 })
@@ -72,6 +209,10 @@ if (hasGSAP && !prefersReducedMotion) {
       .to('.hero-anim[data-anim="lead"]', { y: 0, opacity: 1, duration: 0.7 }, 0.5)
       .to('.hero-anim[data-anim="actions"]', { y: 0, opacity: 1, duration: 0.7 }, 0.65)
       .to('.hero-anim[data-anim="trust"]', { y: 0, opacity: 1, duration: 0.7 }, 0.8);
+
+    heroLines.forEach((line, i) => {
+      setTimeout(() => scrambleChars(line, 14), (0.1 + i * 0.12) * 1000);
+    });
   }
 
   // Browser-preview hero demo (Website Development page): a looping story
@@ -281,6 +422,20 @@ if (hasGSAP && !prefersReducedMotion) {
   }
 
   if (hasScrollTrigger) {
+    // Inner-page hero heading gets the same decode treatment as the
+    // homepage, timed to the same "top 88%" trigger as its own .reveal fade
+    // so the scramble finishes right as the heading becomes visible instead
+    // of settling on the final text while it's still invisible.
+    const pageHeroHeading = document.querySelector(".page-hero h1");
+    if (pageHeroHeading) {
+      splitIntoChars(pageHeroHeading);
+      ScrollTrigger.batch([pageHeroHeading], {
+        start: "top 88%",
+        once: true,
+        onEnter: () => scrambleChars(pageHeroHeading, 12),
+      });
+    }
+
     // Scroll-triggered reveals for everything below the fold
     const revealGroups = new Map();
     document.querySelectorAll(".reveal").forEach((el) => {
