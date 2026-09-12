@@ -17,16 +17,7 @@
 <header class="nav" id="top">
   <div class="container nav__inner">
     <a href="index.html" class="brand">
-      <svg class="logo-mark" width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="url(#termsLogoGrad)"/>
-        <path d="M13 15 L24 33 L35 15" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <defs>
-          <linearGradient id="termsLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#7C3AED"/>
-            <stop offset="1" stop-color="#E93232"/>
-          </linearGradient>
-        </defs>
-      </svg>
+      <img class="logo-mark" src="assets/logo-mark.png" width="40" height="40" alt="Viktech logo">
       <span class="brand__text">
         <span class="brand__name">Viktech</span>
         <span class="brand__tagline">Software Solutions</span>
@@ -146,6 +137,7 @@
   document.getElementById("year").textContent = new Date().getFullYear();
   document.getElementById("updated").textContent = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="script.js"></script>

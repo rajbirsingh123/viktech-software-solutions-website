@@ -25,16 +25,7 @@
 <header class="nav" id="top">
   <div class="container nav__inner">
     <a href="../index.html" class="brand">
-      <svg class="logo-mark" width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="url(#navLogoGrad)"/>
-        <path d="M13 15 L24 33 L35 15" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <defs>
-          <linearGradient id="navLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#7C3AED"/>
-            <stop offset="1" stop-color="#E93232"/>
-          </linearGradient>
-        </defs>
-      </svg>
+      <img class="logo-mark" src="../assets/logo-mark.png" width="40" height="40" alt="Viktech logo">
       <span class="brand__text">
         <span class="brand__name">Viktech</span>
         <span class="brand__tagline">Software Solutions</span>
@@ -63,6 +54,7 @@
     <div class="page-hero__glow page-hero__glow--1" data-drift="1"></div>
     <div class="page-hero__glow page-hero__glow--2" data-drift="2"></div>
     <div class="page-hero__grid"></div>
+    <div class="page-hero__vanta" id="pageHeroVanta" aria-hidden="true"></div>
     <svg class="page-hero__links" viewBox="0 0 1120 420" preserveAspectRatio="none" aria-hidden="true">
       <path class="hero__link-path" d="M60,80 C220,140 320,220 480,260" />
       <path class="hero__link-path" d="M1060,70 C900,130 800,210 640,260" />
@@ -80,6 +72,67 @@
         <a href="../services.html" class="btn btn--ghost magnetic">All services</a>
       </div>
       
+    </div>
+  </section>
+
+  <section class="section section--border">
+    <div class="container">
+      <div class="section__head reveal" style="max-width:640px;margin-left:auto;margin-right:auto;text-align:center;">
+        <span class="eyebrow">Why this matters</span>
+        <h2>7 in 10 phones on Earth run Android — is your business on them?</h2>
+        <p>Android isn't a "nice to have" platform. For most businesses, it's where the majority of your customers already are.</p>
+      </div>
+
+      <div class="story-compare">
+        <div class="story-compare__card reveal">
+          <span class="story-compare__tag">No Android app</span>
+          <div class="story-compare__mock">
+            <div class="story-compare__bar" style="width:70%"></div>
+            <div class="story-compare__bar" style="width:90%"></div>
+            <div class="story-compare__bar" style="width:40%"></div>
+          </div>
+          <span class="story-compare__badge"><span class="story-compare__spinner"></span>Invisible to most phones</span>
+          <ul class="story-compare__list">
+            <li>Missing from most of the market</li>
+            <li>Feels like a website, not an app</li>
+            <li>Crashes on real, older devices</li>
+          </ul>
+        </div>
+
+        <div class="story-compare__arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+
+        <div class="story-compare__card story-compare__card--good reveal reveal--delay-1">
+          <span class="story-compare__tag">Native Android, built by us</span>
+          <div class="story-compare__mock">
+            <div class="story-compare__bar story-compare__bar--accent" style="width:75%"></div>
+            <div class="story-compare__bar" style="width:92%"></div>
+            <div class="story-compare__bar" style="width:65%"></div>
+          </div>
+          <span class="story-compare__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Built for real devices</span>
+          <ul class="story-compare__list">
+            <li>Reaches the majority of smartphones</li>
+            <li>Feels fast and native, not a wrapper</li>
+            <li>Tested across entry-level to flagship phones</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="story-stats reveal reveal--delay-2">
+        <div class="story-stat">
+          <span class="story-stat__num" data-count-to="72">0</span><span class="story-stat__suffix">%</span>
+          <p>of smartphones worldwide run Android, not iOS</p>
+        </div>
+        <div class="story-stat">
+          <span class="story-stat__num" data-count-to="88">0</span><span class="story-stat__suffix">%</span>
+          <p>of mobile time is spent inside apps, not mobile browsers</p>
+        </div>
+        <div class="story-stat">
+          <span class="story-stat__num" data-count-to="190">0</span><span class="story-stat__suffix">+</span>
+          <p>countries Google Play reaches with a single release</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -161,16 +214,7 @@
     <div class="footer__grid">
       <div class="footer__about">
         <div class="brand brand--sm">
-          <svg class="logo-mark" width="34" height="34" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="12" fill="url(#footerLogoGrad)"/>
-        <path d="M13 15 L24 33 L35 15" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <defs>
-          <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#7C3AED"/>
-            <stop offset="1" stop-color="#E93232"/>
-          </linearGradient>
-        </defs>
-      </svg>
+          <img class="logo-mark" src="../assets/logo-mark.png" width="34" height="34" alt="Viktech logo">
           <span class="brand__text">
             <span class="brand__name">Viktech</span>
             <span class="brand__tagline">Software Solutions</span>
@@ -220,7 +264,6 @@
         <div class="footer__contact">
           <a href="mailto:hello@viktechsoftware.com">hello@viktechsoftware.com</a>
           <a href="tel:+12496881693">(249) 688-1693</a>
-          <a href="https://www.google.com/maps/place/Viktech+Software+Solutions/@43.4693442,-80.5828224,15z/data=!4m16!1m9!3m8!1s0x882bf6d0aacc00ef:0xb3a6902cfa14d920!2s410+Woodrow+Dr,+Waterloo,+ON+N2T+2V7!3b1!8m2!3d43.4695504!4d-80.5826853!10e5!16s%2Fg%2F11c5dkygsx!3m5!1s0x882bf75b9eb2131b:0xaab2100694bbc288!8m2!3d43.4695504!4d-80.5826853!16s%2Fg%2F11zfkspb1_?hl=en" target="_blank" rel="noopener">410 Woodrow Drive<br>Waterloo, Ontario, Canada</a>
         </div>
       </div>
     </div>
@@ -234,6 +277,7 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="../script.js"></script>

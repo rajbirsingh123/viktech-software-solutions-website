@@ -87,7 +87,7 @@
       // connector
       if (i > 0) {
         const prevY = centers[i - 1];
-        ctx.strokeStyle = "#e93232";
+        ctx.strokeStyle = "#2563eb";
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(cx, prevY + boxH / 2);
@@ -98,7 +98,7 @@
         ctx.moveTo(cx - 5, y - 10);
         ctx.lineTo(cx, y - 2);
         ctx.lineTo(cx + 5, y - 10);
-        ctx.fillStyle = "#e93232";
+        ctx.fillStyle = "#2563eb";
         ctx.fill();
       }
 
@@ -130,7 +130,7 @@
         const anchorY = centers[anchorIdx] || h / 2;
 
         ctx.setLineDash([4, 4]);
-        ctx.strokeStyle = "#7c3aed";
+        ctx.strokeStyle = "#38bdf8";
         ctx.lineWidth = 1.4;
         ctx.beginPath();
         ctx.moveTo(cx + boxW / 2, anchorY);
@@ -139,12 +139,12 @@
         ctx.setLineDash([]);
 
         roundRect(ctx, x, y, sideBoxW, boxH, 10);
-        ctx.fillStyle = "#f5f1ff";
+        ctx.fillStyle = "#eff6ff";
         ctx.fill();
-        ctx.strokeStyle = "#dcd0fb";
+        ctx.strokeStyle = "#bfdbfe";
         ctx.lineWidth = 1.4;
         ctx.stroke();
-        ctx.fillStyle = "#5b21b6";
+        ctx.fillStyle = "#1d4ed8";
         ctx.fillText(NODE_LIB[key].label, sideX, y + boxH / 2, sideBoxW - 16);
       });
     }

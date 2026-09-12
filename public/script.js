@@ -8,9 +8,30 @@ if (hasScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// ---------- Smooth scroll (Lenis) ----------
+// Eases native scroll site-wide so every scroll-driven animation already
+// on the page (reveals, the pipeline flow dot, hero parallax) rides a
+// smoother scroll position instead of the browser's stock stepped one.
+// Skipped entirely under reduced motion - Lenis's easing IS the motion.
+let lenis = null;
+if (typeof Lenis !== "undefined" && hasGSAP && !prefersReducedMotion) {
+  lenis = new Lenis({
+    duration: 1.1,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+  });
+  if (hasScrollTrigger) {
+    lenis.on("scroll", ScrollTrigger.update);
+  }
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
 // ---------- In-page anchor scrolling ----------
 // Native hash jumps land the section right under the fixed nav bar, so
-// offset for that; otherwise this is just the browser's own smooth scroll.
+// offset for that; otherwise this is just the browser's own smooth scroll
+// (or Lenis's, when it's running - it needs its own scrollTo so the two
+// don't fight over the scroll position mid-animation).
 const NAV_OFFSET = 88;
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener("click", (e) => {
@@ -19,8 +40,12 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     const target = document.querySelector(id);
     if (!target) return;
     e.preventDefault();
-    const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
-    window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    if (lenis) {
+      lenis.scrollTo(target, { offset: -NAV_OFFSET });
+    } else {
+      const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+      window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    }
     history.pushState(null, "", id);
   });
 });
@@ -57,14 +82,22 @@ if (navToggle && navLinks) {
 const canHoverFine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 // ---------- 3D tilt + sheen (service/project cards) ----------
-// Rotates each card toward the cursor and sweeps a light sheen under it -
-// plain CSS custom properties updated on mousemove, no animation library
-// needed. Desktop pointer only; the CSS itself also backs out under
-// reduced motion.
+// Rotates each card toward the cursor, pushes it toward the viewer, and
+// sweeps a light sheen under it - plain CSS custom properties updated on
+// mousemove, no animation library needed. The shadow direction is derived
+// from the same tilt so it reads as one physical card catching light,
+// not a rotation effect layered on a flat drop-shadow. Desktop pointer
+// only; the CSS itself also backs out under reduced motion.
 if (canHoverFine && !prefersReducedMotion) {
-  document.querySelectorAll(".card, .cap-card, .project").forEach((card) => {
+  // Cards get the full tilt; the big full-width CTA panel gets a
+  // noticeably gentler one - at that width/height ratio the same angle
+  // would look warped rather than premium.
+  const tiltTargets = [
+    ...Array.from(document.querySelectorAll(".card, .cap-card, .project")).map((el) => ({ el, strength: 11 })),
+    ...Array.from(document.querySelectorAll(".cta")).map((el) => ({ el, strength: 4 })),
+  ];
+  tiltTargets.forEach(({ el: card, strength: TILT_STRENGTH }) => {
     card.classList.add("tilt");
-    const TILT_STRENGTH = 7; // degrees at the card's edge
     card.addEventListener("mousemove", (e) => {
       const rect = card.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width;
@@ -73,10 +106,14 @@ if (canHoverFine && !prefersReducedMotion) {
       card.style.setProperty("--tilt-y", `${((px - 0.5) * TILT_STRENGTH).toFixed(2)}deg`);
       card.style.setProperty("--sheen-x", `${(px * 100).toFixed(1)}%`);
       card.style.setProperty("--sheen-y", `${(py * 100).toFixed(1)}%`);
+      card.style.setProperty("--shadow-x", `${((px - 0.5) * -22).toFixed(1)}px`);
+      card.style.setProperty("--shadow-y", `${((py - 0.5) * -22 + 18).toFixed(1)}px`);
     });
     card.addEventListener("mouseleave", () => {
       card.style.setProperty("--tilt-x", "0deg");
       card.style.setProperty("--tilt-y", "0deg");
+      card.style.setProperty("--shadow-x", "0px");
+      card.style.setProperty("--shadow-y", "14px");
     });
   });
 }
@@ -208,7 +245,8 @@ if (hasGSAP && !prefersReducedMotion) {
       .to('.hero-anim[data-anim="pill"]', { y: 0, opacity: 1, duration: 0.6 }, 0)
       .to('.hero-anim[data-anim="lead"]', { y: 0, opacity: 1, duration: 0.7 }, 0.5)
       .to('.hero-anim[data-anim="actions"]', { y: 0, opacity: 1, duration: 0.7 }, 0.65)
-      .to('.hero-anim[data-anim="trust"]', { y: 0, opacity: 1, duration: 0.7 }, 0.8);
+      .to('.hero-anim[data-anim="trust"]', { y: 0, opacity: 1, duration: 0.7 }, 0.8)
+      .to('.hero-anim[data-anim="scene"]', { y: 0, opacity: 1, duration: 0.9 }, 0.85);
 
     heroLines.forEach((line, i) => {
       setTimeout(() => scrambleChars(line, 14), (0.1 + i * 0.12) * 1000);
@@ -421,6 +459,136 @@ if (hasGSAP && !prefersReducedMotion) {
     playScene();
   }
 
+  // Hero 3D scene (home page only): three layered panels tilt toward the
+  // cursor as one rigid stack (a fixed resting angle plus a mouse-driven
+  // offset added in CSS via custom properties), so it reads as one solid
+  // object in space rather than flat cards. Idle float/shadow are pure CSS
+  // (see .hero__panel keyframes); this only owns the pointer-driven part.
+  const heroStage = document.getElementById("heroStage");
+  if (heroStage && heroSection && canHover) {
+    heroSection.addEventListener("mousemove", (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      heroStage.style.setProperty("--mouse-ry", `${(px * 16).toFixed(2)}deg`);
+      heroStage.style.setProperty("--mouse-rx", `${(py * -12).toFixed(2)}deg`);
+    });
+    heroSection.addEventListener("mouseleave", () => {
+      heroStage.style.setProperty("--mouse-ry", "0deg");
+      heroStage.style.setProperty("--mouse-rx", "0deg");
+    });
+  }
+
+  // Real WebGL "V" mark (home page only): three extruded bars lit and
+  // rotated in an actual Three.js scene, not a CSS approximation. Wrapped
+  // in try/catch and only swapped in once it's fully built, so a CDN
+  // hiccup or a WebGL-less browser just leaves the CSS panel stack above
+  // in place - nobody sees a broken canvas or an empty gap.
+  const heroThreeEl = document.getElementById("heroThree");
+  if (heroThreeEl && typeof THREE !== "undefined") {
+    try {
+      const W = 420;
+      const H = 340;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(W, H);
+      heroThreeEl.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(38, W / H, 0.1, 100);
+      camera.position.set(0, 0, 6.5);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+      const key = new THREE.DirectionalLight(0xffffff, 0.9);
+      key.position.set(3, 4, 5);
+      scene.add(key);
+      const rim = new THREE.PointLight(0x38bdf8, 1.1, 20);
+      rim.position.set(-3, -2, 3);
+      scene.add(rim);
+
+      // Three bars, positioned by their two endpoints rather than by
+      // rotation angle - much easier to lay out a clean V (and the
+      // separate floating accent stroke the real logo has) this way.
+      function makeBar(x1, y1, x2, y2, thickness, depth, color) {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const length = Math.hypot(dx, dy);
+        const geo = new THREE.BoxGeometry(length, thickness, depth);
+        const mat = new THREE.MeshStandardMaterial({ color, metalness: 0.4, roughness: 0.32 });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set((x1 + x2) / 2, (y1 + y2) / 2, 0);
+        mesh.rotation.z = Math.atan2(dy, dx);
+        return mesh;
+      }
+
+      const group = new THREE.Group();
+      const parts = [
+        makeBar(-1.5, 1.2, 0, -1.4, 0.46, 0.5, 0x1d4ed8),
+        makeBar(0, -1.4, 1.5, 1.2, 0.46, 0.5, 0x2563eb),
+        makeBar(0.75, 0.55, 1.85, 1.55, 0.4, 0.45, 0x38bdf8),
+      ];
+      parts.forEach((mesh) => group.add(mesh));
+
+      // Recenter on the group's actual visual bounds, not (0,0) - the
+      // accent stroke sits off to one side, which would otherwise throw
+      // the rotation pivot off-center.
+      const bounds = new THREE.Box3().setFromObject(group);
+      const center = bounds.getCenter(new THREE.Vector3());
+      parts.forEach((mesh) => mesh.position.sub(center));
+      scene.add(group);
+
+      let mouseX = 0;
+      let mouseY = 0;
+      if (heroSection && canHover) {
+        heroSection.addEventListener("mousemove", (e) => {
+          const rect = heroSection.getBoundingClientRect();
+          mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 0.7;
+          mouseY = -((e.clientY - rect.top) / rect.height - 0.5) * 0.45;
+        });
+        heroSection.addEventListener("mouseleave", () => {
+          mouseX = 0;
+          mouseY = 0;
+        });
+      }
+
+      // rotation.x is purely the smoothed mouse tilt; rotation.y is a
+      // continuously-increasing auto-spin with the smoothed mouse offset
+      // added on top - two independent components computed fresh each
+      // frame, so they never fight each other the way two separate tweens
+      // writing to the same property would.
+      let autoSpin = 0;
+      let tiltX = 0;
+      let tiltY = 0;
+      let rafId;
+      function animate() {
+        rafId = requestAnimationFrame(animate);
+        autoSpin += 0.0035;
+        tiltX += (mouseY - tiltX) * 0.06;
+        tiltY += (mouseX - tiltY) * 0.06;
+        group.rotation.x = tiltX;
+        group.rotation.y = autoSpin + tiltY;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Swap in for the CSS version only now that the scene actually exists.
+      heroThreeEl.classList.add("is-ready");
+      const cssScene = document.querySelector(".hero__scene");
+      if (cssScene) cssScene.style.display = "none";
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          cancelAnimationFrame(rafId);
+        } else if (!rafId) {
+          animate();
+        }
+      });
+    } catch (err) {
+      // Leave the CSS panel stack (.hero__scene) exactly as it was - no partial WebGL mess on screen.
+    }
+  }
+
   if (hasScrollTrigger) {
     // Inner-page hero heading gets the same decode treatment as the
     // homepage, timed to the same "top 88%" trigger as its own .reveal fade
@@ -433,6 +601,20 @@ if (hasGSAP && !prefersReducedMotion) {
         start: "top 88%",
         once: true,
         onEnter: () => scrambleChars(pageHeroHeading, 12),
+      });
+    }
+
+    // Hero 3D scene: each panel drifts upward at its own rate as the hero
+    // scrolls away - the front-most panel moves fastest, so the stack
+    // separates into visible depth instead of leaving as one flat unit.
+    if (heroStage) {
+      document.querySelectorAll(".hero__panel").forEach((panel) => {
+        const depth = parseFloat(panel.dataset.depth || "1");
+        gsap.to(panel, {
+          y: -70 * depth,
+          ease: "none",
+          scrollTrigger: { trigger: heroSection, start: "top top", end: "bottom top", scrub: true },
+        });
       });
     }
 
@@ -450,6 +632,46 @@ if (hasGSAP && !prefersReducedMotion) {
         once: true,
         onEnter: (batch) =>
           gsap.to(batch, { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: "power3.out" }),
+      });
+    });
+
+    // Anything already inside the "top 88%" line at load (every page-hero's
+    // own eyebrow/heading/lead, on every inner page) never gets a scroll
+    // event that crosses into its trigger, so batch's onEnter has nothing
+    // to react to and it would otherwise stay stuck at the hidden gsap.set()
+    // state forever. Reveal those directly instead of waiting on it - run
+    // once now and again after fonts/images settle, since those can shift
+    // an element from "below the fold" to "already in view" or back.
+    function revealAlreadyInView() {
+      document.querySelectorAll(".reveal").forEach((el) => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.88) {
+          gsap.to(el, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" });
+        }
+      });
+    }
+    requestAnimationFrame(revealAlreadyInView);
+
+    // "Why this matters" stat counters: count up from 0 once each one
+    // scrolls into view, instead of just appearing with the number already
+    // there - a plain reveal on numbers like these reads as static data, a
+    // count feels like something is actually being measured.
+    document.querySelectorAll("[data-count-to]").forEach((el) => {
+      const raw = el.dataset.countTo;
+      const target = parseFloat(raw);
+      const decimals = raw.includes(".") ? raw.split(".")[1].length : 0;
+      const counter = { val: 0 };
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 88%",
+        once: true,
+        onEnter: () => {
+          gsap.to(counter, {
+            val: target,
+            duration: 1.4,
+            ease: "power2.out",
+            onUpdate: () => { el.textContent = counter.val.toFixed(decimals); },
+          });
+        },
       });
     });
 
@@ -471,9 +693,15 @@ if (hasGSAP && !prefersReducedMotion) {
 
     // Trigger positions are measured before web fonts/images finish loading,
     // which can shift section heights - recompute once everything settles.
-    window.addEventListener("load", () => ScrollTrigger.refresh());
+    window.addEventListener("load", () => {
+      ScrollTrigger.refresh();
+      revealAlreadyInView();
+    });
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => ScrollTrigger.refresh());
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
+        revealAlreadyInView();
+      });
     }
   } else {
     // ScrollTrigger failed to load (e.g. CDN hiccup) - just show everything.
@@ -481,12 +709,18 @@ if (hasGSAP && !prefersReducedMotion) {
       el.style.opacity = "1";
       el.style.transform = "none";
     });
+    document.querySelectorAll("[data-count-to]").forEach((el) => {
+      el.textContent = el.dataset.countTo;
+    });
   }
 } else {
   // No GSAP / reduced motion: show everything immediately, no animation.
   document.querySelectorAll(".reveal, .hero-anim, .hero-title .line-inner").forEach((el) => {
     el.style.opacity = "1";
     el.style.transform = "none";
+  });
+  document.querySelectorAll("[data-count-to]").forEach((el) => {
+    el.textContent = el.dataset.countTo;
   });
 }
 
