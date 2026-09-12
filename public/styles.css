@@ -809,6 +809,73 @@ p { color: var(--muted); }
   .browser-demo__badge { opacity: 1; transform: scale(1); }
 }
 
+/* ---------- Phone demo (mobile-app service pages) ---------- */
+/* Same looping story as .browser-demo (load bar fills, content appears,
+   feature badges pop in, hold, reset) in a phone frame instead of a
+   browser window - reuses the .ui-block/.ui-card/.ui-chip mockup pieces
+   built for the old hero panels rather than duplicating that CSS. */
+.phone-demo {
+  position: relative;
+  width: 220px;
+  margin: 48px auto 0;
+  padding: 14px 14px 20px;
+  border-radius: 34px;
+  background: var(--navy);
+  box-shadow: var(--shadow-lg);
+}
+.phone-demo__notch {
+  width: 70px;
+  height: 18px;
+  margin: 0 auto 8px;
+  border-radius: 0 0 12px 12px;
+  background: #050f2b;
+}
+.phone-demo__screen {
+  position: relative;
+  height: 360px;
+  border-radius: 22px;
+  background: #fff;
+  overflow: hidden;
+  padding: 26px 16px 16px;
+}
+.phone-demo__loadbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+.phone-demo__content { opacity: 0; }
+.phone-demo__badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--navy);
+  opacity: 0;
+  transform: scale(0.6);
+  white-space: nowrap;
+}
+.phone-demo__badge svg { width: 12px; height: 12px; color: var(--accent); flex-shrink: 0; }
+.phone-demo__badge--a { top: 96px; right: 12px; }
+.phone-demo__badge--b { bottom: 60px; left: 12px; }
+@media (max-width: 560px) {
+  .phone-demo { margin-top: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phone-demo__content { opacity: 1; }
+  .phone-demo__loadbar { width: 100%; }
+  .phone-demo__badge { opacity: 1; transform: scale(1); }
+}
+
 /* ---------- "Why this matters" story chapter (service pages) ---------- */
 /* Two small device mockups side by side - a slow/outdated one and a fast/
    modern one - so the stakes are shown, not just claimed in a sentence. */

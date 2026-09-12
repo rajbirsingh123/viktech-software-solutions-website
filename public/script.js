@@ -279,6 +279,32 @@ if (hasGSAP && !prefersReducedMotion) {
       .set(loadbar, { opacity: 1 });
   }
 
+  // Phone-preview hero demo (Android/iOS/Flutter/React Native pages): the
+  // same looping story as the browser demo above, just in a phone frame -
+  // each of those pages has at most one of these, so the generic ids are
+  // safe to reuse across them.
+  const phoneDemo = document.getElementById("phoneDemo");
+  if (phoneDemo) {
+    const pLoadbar = document.getElementById("pdLoadbar");
+    const pContent = document.getElementById("pdContent");
+    const pBadgeA = document.getElementById("pdBadgeA");
+    const pBadgeB = document.getElementById("pdBadgeB");
+
+    const phoneTl = gsap.timeline({ repeat: -1, repeatDelay: 1.1, delay: 1 });
+    phoneTl
+      .set(pLoadbar, { width: "0%" })
+      .set(pContent, { opacity: 0, y: 8 })
+      .set([pBadgeA, pBadgeB], { opacity: 0, scale: 0.6 })
+      .to(pLoadbar, { width: "100%", duration: 0.7, ease: "power1.inOut" })
+      .to(pLoadbar, { opacity: 0, duration: 0.25 }, "-=0.05")
+      .to(pContent, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.1")
+      .to(pBadgeA, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, "-=0.15")
+      .to(pBadgeB, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, "-=0.2")
+      .to({}, { duration: 1.8 })
+      .to([pContent, pBadgeA, pBadgeB], { opacity: 0, duration: 0.35 })
+      .set(pLoadbar, { opacity: 1 });
+  }
+
   // Magnetic buttons (gsap only, no ScrollTrigger dependency)
   document.querySelectorAll(".magnetic").forEach((btn) => {
     const strength = 0.35;
